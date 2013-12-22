@@ -26,6 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import data.HeroData;
+
 public class ActorStage extends Stage{
 	
 //	public Image hero;
@@ -84,9 +86,9 @@ public class ActorStage extends Stage{
 //		hero.getBody().ap
 	}
 	
-	public void applyLinearImpulse(Vector2 force){
+	public void applyLinearImpulse(float x, float y){
 		if(hero.getLinearVelocity().x <= GLOBAL.MAX_VELOCITY){
-			hero.applyLinearImpulse(force);
+			hero.applyLinearImpulse(x, y);
 		}
 	}
 	
@@ -96,16 +98,16 @@ public class ActorStage extends Stage{
 		}
 	}
 	
-	public void moveHero(Vector2 pos){
-		if(hero != null){
-			hero.setPosition(pos);
-		}
-	}
-	public void moveHero(float x, float y){
-		if(hero != null){
-			hero.setPosition(x, y);
-		}
-	}
+//	public void moveHero(Vector2 pos){
+//		if(hero != null){
+//			hero.setPosition(pos);
+//		}
+//	}
+//	public void moveHero(float x, float y){
+//		if(hero != null){
+//			hero.setPosition(x, y);
+//		}
+//	}
 	
 	private void createHero(float x, float y){
 		System.out.println("ActorStage.createHero()");
@@ -123,7 +125,7 @@ public class ActorStage extends Stage{
 //		bd.position.set(0f, 20);
 		bd.position.set(x, y);
 		
-		hero = new BodyImageActor2("hero", texRegion, world, bd, fd, this);
+		hero = new BodyImageActor2("hero", texRegion, world, bd, fd, new HeroData(), this);
 //		this.addActor(hero);
 		
 		
@@ -181,7 +183,8 @@ public class ActorStage extends Stage{
 //		System.out.println("ActorStage.act()");
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		super.act(delta);
-		hero.setPosition(hero.getBody().getPosition());
+//		hero.setPosition(hero.getBody().getPosition());
+		hero.refreshImagePosition();
 //		camera.
 		world.step(delta, 3, 3);
 		

@@ -6,6 +6,8 @@
  */
 package actors;
 
+import java.util.ArrayList;
+
 import variaveis.GLOBAL;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,6 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -22,6 +25,8 @@ import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
+import data.GeneralUserData;
 
 public class BodyImageActor2 {
 
@@ -31,6 +36,8 @@ public class BodyImageActor2 {
 	
 	private MouseJoint mouseJoint = null;
 	
+	private boolean direction = true; //true == direita, false == esq
+	
 //	public BodyImageActor2(String name, TextureRegion texture, World world, BodyDef def, Shape shape, float density) {
 //		image = new Image(texture);
 //		image.setName(name);
@@ -39,24 +46,34 @@ public class BodyImageActor2 {
 //		body.setUserData(this);
 //	}
 //	
-	public BodyImageActor2(String name, TextureRegion texture, World world, BodyDef def, FixtureDef fixturedef) {
-		image = new Image(texture);
-		System.out.println("creating BodyImageActor: " + name);
-		image.setName(name);
-		body = world.createBody(def);
-		body.createFixture(fixturedef);	
-		body.setUserData(this);
-	}
+//	public BodyImageActor2(String name, TextureRegion texture, World world, BodyDef def, FixtureDef fixturedef) {
+//		image = new Image(texture);
+//		System.out.println("creating BodyImageActor: " + name);
+//		image.setName(name);
+//		body = world.createBody(def);
+//		body.createFixture(fixturedef);	
+//		body.setUserData(this);
+//		
+//		
+//	}
 	
-	public BodyImageActor2(String name, TextureRegion texture, World world, BodyDef def, FixtureDef fixturedef, Stage stage) {
+	private float scale = 16;
+	
+	public BodyImageActor2(String name, TextureRegion texture, World world, BodyDef def, FixtureDef fixturedef, GeneralUserData data, Stage stage) {
 		image = new Image(texture);
 		System.out.println("creating BodyImageActor: " + name);
 		image.setName(name);
+		image.setBounds(1, 1, 2, 2);
+//		image.scale(1/16);
+//		image.
+//		image.
+//		image.scale(1, 1);
+//		image.size(1, 1);
 		stage.addActor(image);
 
 		body = world.createBody(def);
 		body.createFixture(fixturedef);	
-		body.setUserData(this);
+		body.setUserData(data);
 	}
 	
 	public void destroyBody() {
@@ -161,6 +178,10 @@ public class BodyImageActor2 {
 		}
 	}
 	
+	public Vector2 getBodyPosition(){
+		return body.getPosition();
+	}
+	
 	public float getX(){
 		return image.getX();
 	}
@@ -169,13 +190,17 @@ public class BodyImageActor2 {
 		return image.getY();
 	}
 	
-	public void setPosition(Vector2 pos){
-		image.setPosition(pos.x, pos.y);
+	public void refreshImagePosition(){
+		image.setPosition(body.getPosition().x - (image.getWidth()/2), body.getPosition().y - (image.getHeight()/2));
 	}
 	
-	public void setPosition(float x, float y){
-		image.setPosition(x, y);
-	}
+//	public void setPosition(Vector2 pos){
+//		image.setPosition(pos.x, pos.y);
+//	}
+//	
+//	public void setPosition(float x, float y){
+//		image.setPosition(x, y);
+//	}
 	
 //	public void setBodyPosition(Vector2 pos){
 //		body.set
@@ -186,13 +211,47 @@ public class BodyImageActor2 {
 		return body.getLinearVelocity();
 	}
 	
-	public void applyLinearImpulse(Vector2 force){
-		body.applyLinearImpulse(force.x, 0, body.getPosition().x, body.getPosition().y, true);
-		
+	public void applyLinearImpulse(float x, float y){
+		body.applyLinearImpulse(x, y, body.getPosition().x, body.getPosition().y, true);
 	}
 	
 	public void applyLinearImpulseX(float x){
 		body.applyLinearImpulse(x, 0, body.getPosition().x, body.getPosition().y, true);
-		
+	}
+
+	public void applyLinearImpulseY(float y){
+		body.applyLinearImpulse(0, y, body.getPosition().x, body.getPosition().y, true);
+	}
+	
+	public void applyForceToCenter(Vector2 force){
+		body.applyForceToCenter(force, true);
+	}
+
+	public void applyForceToCenter(float forceX, float forceY){
+		body.applyForceToCenter(forceX, forceY, true);
+	}
+	
+	public void applyForceToCenter(float forceX){
+		body.applyForceToCenter(forceX, 0, true);
+	}
+	
+	public Vector2 getWorldCenter(){
+		return body.getWorldCenter();
+	}
+	
+	public boolean hasJoint(){
+		return !(body.getJointList().isEmpty());
+	}
+	
+	public ArrayList<JointEdge> getJointList(){
+		return body.getJointList();
+	}
+	
+	public boolean getDirection(){
+		return direction;
+	}
+	
+	public void setDirection(boolean dir){
+		direction = dir;
 	}
 }

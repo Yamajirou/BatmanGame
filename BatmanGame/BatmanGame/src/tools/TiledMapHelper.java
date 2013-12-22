@@ -33,6 +33,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.CircleMapObject;
@@ -62,20 +63,54 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
+import data.GameOverData;
+import data.GeneralUserData;
+import data.PlataformaData;
+import data.SupportData;
+
 public class TiledMapHelper {
 	private static final int[] layersList = { 0 };
+	
+	private FileHandle packFileDirectory;
 
+	private OrthographicCamera camera;
+
+	private float scale = 1;
+	
+//	private TileAtlas tileAtlas;
+	private OrthogonalTiledMapRenderer tileMapRenderer;
+
+	private TiledMap map;
+	
+	public TiledMapHelper(Camera cam, String packerDir, String tmxFile, World world, float scale){
+		camera = (OrthographicCamera) cam;
+		this.scale = scale;
+		setPackerDirectory(packerDir);
+		loadMap(tmxFile);
+//		tileMapRenderer.setView(camera);
+		loadCollisions(world);
+//		Vector3 tmp = new Vector3();
+//		tmp.set(0, 0, 0);
+//		camera.unproject(tmp);
+	}
+	
+	public TiledMapHelper(){}
+	
 	/**
 	 * Renders the part of the map that should be visible to the user.
 	 */
 	public void render() {
 //		tileMapRenderer.getProjectionMatrix().set(camera.combined);
 		tileMapRenderer.setView(camera);
+//		tileMapRenderer.setView((OrthographicCamera)cam);
 
 		Vector3 tmp = new Vector3();
 		tmp.set(0, 0, 0);
 		camera.unproject(tmp);
+//		cam.unproject(tmp);
 
+//		camera.unproject(camera.position);
+		
 //		tileMapRenderer.render((int) tmp.x, (int) tmp.y, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), layersList);
 		tileMapRenderer.render(layersList);
 	}
@@ -152,9 +187,8 @@ public class TiledMapHelper {
 //		map = TiledLoader.createMap(Gdx.files.internal(tmxFile));
 		map = new TmxMapLoader().load(tmxFile);
 //		tileAtlas = new TileAtlas(map, packFileDirectory);
-
 //		tileMapRenderer = new TileMapRenderer(map, tileAtlas, 16, 16);
-		tileMapRenderer = new OrthogonalTiledMapRenderer(map, 1 / 16f);
+		tileMapRenderer = new OrthogonalTiledMapRenderer(map, 1/scale);
 	}
 	
 	public void loadCollisions(World world){
@@ -179,15 +213,16 @@ public class TiledMapHelper {
 //					System.out.println(it.next());
 //				}
 //				System.out.println("rectangleObject = " + obj.getProperties().get("gameover"));
-//				GeneralUserData data;
-//				if(obj.getProperties().containsKey("gameover")){
-//					data = new GameOverData();
-//				}else{
-//					data = new PlataformaData();
-//				}
-				createRectangle(world, obj.getRectangle().height/16, obj.getRectangle().width/16, 
-									obj.getRectangle().x/16, obj.getRectangle().y/16);
-//									obj.getRectangle().x/16, obj.getRectangle().y/16, data);
+				GeneralUserData data;
+				if(obj.getProperties().containsKey("gameover")){
+					data = new GameOverData();
+				}else{
+					data = new PlataformaData();
+				}
+				
+				createRectangle(world, obj.getRectangle().height/scale, obj.getRectangle().width/scale, 
+//									obj.getRectangle().x/16, obj.getRectangle().y/1);
+									obj.getRectangle().x/scale, obj.getRectangle().y/scale, data);
 			}
 		}
 		
@@ -215,11 +250,11 @@ public class TiledMapHelper {
 //				System.out.println("vertices:");
 				for(int i = 0; i < vertices.length; i++){
 //					System.out.println(vertices[i]);
-					vertices[i] = (Float)((vertices[i] / 16f) + x);
+					vertices[i] = (Float)((vertices[i] / scale) + x);
 //					System.out.println(vertices[i]);
 					i++;
 //					System.out.println(vertices[i]);
-					vertices[i] = (Float)((vertices[i] / 16f) + y);
+					vertices[i] = (Float)((vertices[i] / scale) + y);
 //					System.out.println(vertices[i]);
 				}
 				createPolygon(world, vertices);
@@ -253,9 +288,9 @@ public class TiledMapHelper {
 //				System.out.println("radius: " + radius);
 				
 				radius /= 32;
-				x /= 16;
+				x /= scale;
 				x += radius;
-				y /= 16;
+				y /= scale;
 				y += radius;
 				
 				
@@ -289,7 +324,7 @@ public class TiledMapHelper {
 		bd.position.set(x, y);
 		circle = world.createBody(bd);
 //		circle.getMassData().center = new Vector2(x,y);
-//		circle.setUserData(new SupportData());
+		circle.setUserData(new SupportData());
 		CircleShape shape = new CircleShape();
 //		System.out.println("circleCenter = " + circle.getWorldCenter());
 //		shape.setPosition(new Vector2(x,y));
@@ -300,8 +335,8 @@ public class TiledMapHelper {
 	
 	}
 	
-	private void createRectangle(World world, float height, float width, float x, float y){
-//	private void createRectangle(World world, float height, float width, float x, float y, GeneralUserData data){
+//	private void createRectangle(World world, float height, float width, float x, float y){
+	private void createRectangle(World world, float height, float width, float x, float y, GeneralUserData data){
 		Body body;
 		BodyDef bd = new BodyDef();
 		bd.position.set(x + (width/2), y + (height/2));
@@ -318,7 +353,7 @@ public class TiledMapHelper {
 		body.createFixture(shape, 0.0f);
 //		ground.setUserData(data);
 		
-//		body.setUserData(data);
+		body.setUserData(data);
 		shape.dispose();
 		
 	}
@@ -664,12 +699,5 @@ public class TiledMapHelper {
 		}
 	}
 
-	private FileHandle packFileDirectory;
 
-	private OrthographicCamera camera;
-
-//	private TileAtlas tileAtlas;
-	private OrthogonalTiledMapRenderer tileMapRenderer;
-
-	private TiledMap map;
 }

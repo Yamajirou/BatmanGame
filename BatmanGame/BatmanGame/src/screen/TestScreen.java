@@ -1,8 +1,10 @@
 package screen;
 
+import stage.ActorBox2DStage;
 import stage.ActorStage;
 import stage.Box2DStage;
 import stage.StageUI;
+import stage.StageUITest;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -19,9 +21,12 @@ import bat.man.game.BatmanGame;
 public class TestScreen implements Screen{
 	
 	
-	private ActorStage actorStage;
+	private ActorBox2DStage actorStage;
 	private StageUI ui;
+	
 	private Box2DStage box2dStage;
+	private StageUITest uiTest;
+	
 	private OrthographicCamera camera;
 	
 	public TestScreen() {
@@ -43,36 +48,38 @@ public class TestScreen implements Screen{
 //		camera = new OrthographicCamera(48, 32);
 //		camera.position.set(0, 15, 0);
 
-		actorStage = new ActorStage();
+		actorStage = new ActorBox2DStage();
 		ui = new StageUI(actorStage);
+		Gdx.input.setInputProcessor(ui);
 		
 		
 //		ui = new StageUI();
 		
-		Gdx.input.setInputProcessor(ui);
 		
 //		box2dStage = new Box2DStage(this.camera);
 //		box2dStage = new Box2DStage();
+//		uiTest = new StageUITest(box2dStage);
 	}
 
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
-		ui.act(delta);
-		actorStage.act(delta);
+		Gdx.gl.glClearColor( 0f, 0f, 0f, 1f );
+		Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
 		
 //		camera.position.set(actorStage.hero.getX(), actorStage.hero.getY(), 0);
 //		camera.update();
 		
-		Gdx.gl.glClearColor( 0f, 0f, 0f, 1f );
-        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT );
         
+//        uiTest.act();
 //        box2dStage.render(delta);
+//        uiTest.draw();
+//        Table.drawDebug(uiTest);
 
+        ui.act(delta);
+        actorStage.act(delta);
         // draw the actors
         ui.draw();
         actorStage.draw();
-//        stage.draw();
         Table.drawDebug(ui);
 	}
 
@@ -111,7 +118,9 @@ public class TestScreen implements Screen{
 		// TODO Auto-generated method stub
 		actorStage.dispose();
 		ui.dispose();
+		
 //		box2dStage.dispose();
+//		uiTest.dispose();
 	}
 
 }

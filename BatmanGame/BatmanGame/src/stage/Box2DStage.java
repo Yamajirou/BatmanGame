@@ -35,7 +35,7 @@ public class Box2DStage {
 //	public Box2DStage(Camera camera){
 //		this.camera = (OrthographicCamera) camera;
 	public Box2DStage(){
-		camera = new OrthographicCamera(48, 32);
+//		camera = new OrthographicCamera(48, 32);
 		
 		stage = new Stage(GLOBAL.SCREEN_WIDTH, GLOBAL.SCREEN_HEIGHT, true);
 //		stage.setCamera(this.camera);
@@ -52,7 +52,7 @@ public class Box2DStage {
 //		BodyDef bodyDef = new BodyDef();
 //		groundBody = world.createBody(bodyDef);
 		
-		createStaticSquare(2, 2, 0, 0);
+		createStaticSquare(2, 2, 1, 1);
 		
 		// call abstract method to populate the world
 //		createWorld(world);
@@ -62,10 +62,11 @@ public class Box2DStage {
 		world.step(delta, 3, 3);
 		// clear the screen and setup the projection matrix
 				Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-				camera.update();
+//				camera.update();
 
 				// render the world using the debug renderer
-				renderer.render(world, camera.combined);
+//				renderer.render(world, camera.combined);
+				renderer.render(world, stage.getCamera().combined);
 //				renderer.
 		stage.act(delta);
 		stage.draw();

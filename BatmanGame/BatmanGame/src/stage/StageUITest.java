@@ -32,7 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 
-public class StageUI extends Stage{
+public class StageUITest extends Stage{
 	ActorBox2DStage mainStage;
 	PrintTimer pt;
 	int counter = 0;
@@ -66,23 +66,23 @@ public class StageUI extends Stage{
 	Touchpad touchpad;
 	
 	
-	public StageUI(ActorBox2DStage stage){
+	public StageUITest(Box2DStage stage){
 //		super(GLOBAL.SCREEN_WIDTH, GLOBAL.SCREEN_HEIGHT, true);
 		Texture.setEnforcePotImages(false);
 		
 		df = new DecimalFormat("##.##");
 		df.setRoundingMode(RoundingMode.DOWN);
 		
-		this.mainStage = stage;
-		if(mainStage.hero !=null){
-			System.out.println("mainStage.hero != null");
-//			System.out.println("hero.getName() = " + mainStage.hero.getName());
-			System.out.println("hero.getBody = " + mainStage.hero.getBody());
-//			System.out.println("hero." + mainStage.hero.);
-			if(stage.hero.getBody() == null){
-				System.out.println("StageUI() - hero.getBody() == null");
-			}
-		}
+//		this.mainStage = stage;
+//		if(mainStage.hero !=null){
+//			System.out.println("mainStage.hero != null");
+////			System.out.println("hero.getName() = " + mainStage.hero.getName());
+//			System.out.println("hero.getBody = " + mainStage.hero.getBody());
+////			System.out.println("hero." + mainStage.hero.);
+//			if(stage.hero.getBody() == null){
+//				System.out.println("StageUI() - hero.getBody() == null");
+//			}
+//		}
 		
 		pt = new PrintTimer();
 		
@@ -106,14 +106,12 @@ public class StageUI extends Stage{
 		
 		but1.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
-				System.out.println("jump");
-				mainStage.applyLinearImpulseY(blockSpeed*5);
+				System.out.println("but1");
 			}
 		});
 		but2.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
 				System.out.println("but2");
-				mainStage.throwRope();
 			}
 		});
 		but3.addListener(new ChangeListener() {
@@ -256,7 +254,7 @@ public class StageUI extends Stage{
 	public void act(float delta) {
 		super.act(delta);
 //		mainStage.act(delta);
-//		String s = "Actors:\n";
+		String s = "Actors:\n";
 //		System.out.println(mainStage.getActors().items.length);
 //		for(Actor a : mainStage.getActors().items){
 //			s = s + a + "\n";
@@ -264,40 +262,26 @@ public class StageUI extends Stage{
 //		}
 		
 		
-		if(mainStage.hero == null)
-			return;
-		if(mainStage.hero.getBody() == null){
-			System.out.println("null");
-		}else{
+//		if(mainStage.hero == null)
+//			return;
+//		if(mainStage.hero.getBody() == null){
+//			System.out.println("null");
+//		}else{
 //			float x = mainStage.hero.getX() + touchpad.getKnobPercentX() * blockSpeed;
 //			float y = mainStage.hero.getY() + touchpad.getKnobPercentY() * blockSpeed;
-			float forceX = touchpad.getKnobPercentX() * blockSpeed;
+//			float forceX = touchpad.getKnobPercentX() * blockSpeed;
 //			float forceY = touchpad.getKnobPercentY() * blockSpeed;
-//			mainStage.hero.applyForce(new Vector2(x,y), mainStage.hero.getBody().getWorldCenter());
-//			System.out.println("forceX = " + forceX);
-//			System.out.println("forceY = " + forceY);
-//			mainStage.applyForceOnHero(new Vector2(forceX, forceY));
-			if(!mainStage.hero.hasJoint()){
-				if(forceX == 0){
-					if(mainStage.hero.getLinearVelocity().x != 0){
-		//				forceX = mainStage.hero.getLinearVelocity().x / 2; 
-	//					forceX = blockSpeed / (mainStage.hero.getLinearVelocity().x);
-						forceX = blockSpeed * (mainStage.hero.getLinearVelocity().x / GLOBAL.MAX_VELOCITY) * 3;
-		//				Gdx.app.log("break", ""+force);
-						//hero.applyLinearImpulse(new Vector2(-force, 0f), hero.getWorldCenter(), false);
-						forceX = -forceX;
-					}
-				}
-			}
-//			System.out.println("applying force: " + forceX);
-			mainStage.applyLinearImpulseX(forceX);
-//			mainStage.applyForceToCenterX(forceX);
-//			mainStage.hero.setPosition(x, y);
-//			mainStage.moveHero(x, y);
-//			mainStage.act(delta);
-			textBody.setText("Body: " + (df.format(mainStage.hero.getBody().getPosition().x)) + ", " + (df.format(mainStage.hero.getBody().getPosition().y)));
-			textImage.setText("Image: " + (df.format(mainStage.hero.getX())) + ", " + (df.format(mainStage.hero.getY())));
-		}
+////			mainStage.hero.applyForce(new Vector2(x,y), mainStage.hero.getBody().getWorldCenter());
+////			System.out.println("forceX = " + forceX);
+////			System.out.println("forceY = " + forceY);
+////			mainStage.applyForceOnHero(new Vector2(forceX, forceY));
+//			mainStage.applyLinearImpulseX(forceX);
+////			mainStage.hero.setPosition(x, y);
+////			mainStage.moveHero(x, y);
+////			mainStage.act(delta);
+//			textBody.setText("Body: " + (df.format(mainStage.hero.getBody().getPosition().x)) + ", " + (df.format(mainStage.hero.getBody().getPosition().y)));
+//			textImage.setText("Image: " + (df.format(mainStage.hero.getX())) + ", " + (df.format(mainStage.hero.getY())));
+//		}
 		//Move blockSprite with TouchPad
 //        blockSprite.setX(blockSprite.getX() + touchpad.getKnobPercentX()*blockSpeed);
 //        blockSprite.setY(blockSprite.getY() + touchpad.getKnobPercentY()*blockSpeed);
