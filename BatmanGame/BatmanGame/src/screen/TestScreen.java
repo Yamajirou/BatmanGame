@@ -52,7 +52,6 @@ public class TestScreen implements Screen{
 		ui = new StageUI(actorStage);
 		Gdx.input.setInputProcessor(ui);
 		
-		
 //		ui = new StageUI();
 		
 		

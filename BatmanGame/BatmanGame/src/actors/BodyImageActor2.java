@@ -63,13 +63,14 @@ public class BodyImageActor2 {
 		image = new Image(texture);
 		System.out.println("creating BodyImageActor: " + name);
 		image.setName(name);
-		image.setBounds(1, 1, 2, 2);
+		image.setBounds(1, 1, 1, 1);
 //		image.scale(1/16);
 //		image.
 //		image.
 //		image.scale(1, 1);
 //		image.size(1, 1);
 		stage.addActor(image);
+		
 
 		body = world.createBody(def);
 		body.createFixture(fixturedef);	
@@ -253,5 +254,17 @@ public class BodyImageActor2 {
 	
 	public void setDirection(boolean dir){
 		direction = dir;
+	}
+	
+	public float getHeigth(){
+		return image.getHeight();
+	}
+	
+	public float getWidth(){
+		return image.getWidth();
+	}
+	
+	public Body getLinkedBody(){
+		return body.getJointList().get(0).other;
 	}
 }

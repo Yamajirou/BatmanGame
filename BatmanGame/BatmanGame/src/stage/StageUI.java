@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 
 import tools.PrintTimer;
 import variaveis.GLOBAL;
+import actors.AnimatedActorHero;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -47,6 +48,7 @@ public class StageUI extends Stage{
 	
 	TextField textBody;
 	TextField textImage;
+	TextField textDebug;
 	DecimalFormat df;
 	
 	Skin uiSkin;
@@ -57,7 +59,7 @@ public class StageUI extends Stage{
     private Drawable touchKnob;
     private Texture blockTexture;
     private Sprite blockSprite;
-    private float blockSpeed = 5;
+    private float blockSpeed = 2;
 	
 	private TextureAtlas atlas;
 	private TextureRegion texRegion;
@@ -97,6 +99,7 @@ public class StageUI extends Stage{
 		
 		textBody = new TextField("", uiSkin);
 		textImage = new TextField("", uiSkin);
+		textDebug = new TextField("", uiSkin);
 //		text.set
 		
 		but1 = new Button(drawable);
@@ -113,7 +116,8 @@ public class StageUI extends Stage{
 		but2.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
 				System.out.println("but2");
-				mainStage.throwRope();
+//				mainStage.throwRope();
+				mainStage.testHero.setStandBy(AnimatedActorHero.STANDBY_RIGHT);
 			}
 		});
 		but3.addListener(new ChangeListener() {
@@ -212,6 +216,7 @@ public class StageUI extends Stage{
 		table3.left().top().pad(10);
 		table3.add(textBody);
 		table3.add(textImage);
+		table3.add(textDebug);
 		
 		this.addActor(table);
 		this.addActor(table2);
@@ -295,8 +300,9 @@ public class StageUI extends Stage{
 //			mainStage.hero.setPosition(x, y);
 //			mainStage.moveHero(x, y);
 //			mainStage.act(delta);
-			textBody.setText("Body: " + (df.format(mainStage.hero.getBody().getPosition().x)) + ", " + (df.format(mainStage.hero.getBody().getPosition().y)));
-			textImage.setText("Image: " + (df.format(mainStage.hero.getX())) + ", " + (df.format(mainStage.hero.getY())));
+			textBody.setText("position: " + (df.format(mainStage.hero.getBody().getPosition().x)) + ", " + (df.format(mainStage.hero.getBody().getPosition().y)));
+			textImage.setText("velocity: " + (df.format(mainStage.hero.getLinearVelocity().x)));
+			textDebug.setText(mainStage.toPrint());
 		}
 		//Move blockSprite with TouchPad
 //        blockSprite.setX(blockSprite.getX() + touchpad.getKnobPercentX()*blockSpeed);
