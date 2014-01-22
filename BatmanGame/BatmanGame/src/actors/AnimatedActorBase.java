@@ -97,6 +97,10 @@ public class AnimatedActorBase extends Actor{
 		return animation.isAnimationFinished(stateTime);
 	}
 	
+	public TextureRegion getFrameByIndex(int index){
+		return animation.getKeyFrame(animation.frameDuration * index);
+	}
+	
 	@Override
 	public void act(float delta) {
 		super.act(delta);

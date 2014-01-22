@@ -10,6 +10,7 @@ import actors.AnimatedActorHero;
 import actors.AnimatedSimpleActor;
 import actors.BodyImageActor;
 import actors.BodyImageActor2;
+import actors.BodyImageActor3;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -50,9 +51,11 @@ import data.HeroData;
 public class ActorBox2DStage{
 	
 //	public Image hero;
-	public BodyImageActor2 hero;
+//	public BodyImageActor2 hero;
+	public BodyImageActor3 hero;
 //	private TextureAtlas atlas;
 	private TextureRegion texRegion;
+	private Texture heroTexture;
 	private TextureRegion cordaTex;
 	private Texture cordaAni;
 	
@@ -67,9 +70,9 @@ public class ActorBox2DStage{
 	
 	private Image corda;
 	private AnimatedSimpleActor fallingRope;
-	private AnimatedActorBase fallingRope2;
+//	private AnimatedActorBase fallingRope2;
 	private Texture ropeTexture;
-	public AnimatedActorHero testHero;
+//	public AnimatedActorHero testHero;
 //	private boolean canThrowRope = true;
 	
 	private Array<BodyImageActor2> actors;
@@ -113,7 +116,9 @@ public class ActorBox2DStage{
 //		this.camera = camera;
 //		skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 //        image2 = new TextureRegion(new Texture(Gdx.files.internal("data/badlogic.jpg")));
-		texRegion = new TextureRegion(new Texture(Gdx.files.internal("data/Toad.png")));
+//		heroTexture = new Texture(Gdx.files.internal("data/Toad.png"));
+		heroTexture = new Texture(Gdx.files.internal("data/walkanim.png"));
+		texRegion = new TextureRegion(heroTexture);
 //		Drawable drawable = new TextureRegionDrawable(texRegion);
 //        ui = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 //        Gdx.input.setInputProcessor(this);
@@ -154,17 +159,17 @@ public class ActorBox2DStage{
 //		fallingRope2.setScale(0.1f, 0.1f);
 //		fallingRope2.setPlayMode(Animation.LOOP);
 		
-		testHero = new AnimatedActorHero(1f, ropeTexture, cols, rows);
-		testHero.setBounds(1, 1, 0.1f, 0.1f);
-		testHero.setScale(0.1f, 0.1f);
-		testHero.setPlayMode(Animation.LOOP);
-		testHero.setStandByTextureRight(0);
+//		testHero = new AnimatedActorHero(1f, ropeTexture, cols, rows);
+//		testHero.setBounds(1, 1, 0.1f, 0.1f);
+//		testHero.setScale(0.1f, 0.1f);
+//		testHero.setPlayMode(Animation.LOOP);
+//		testHero.setStandByTextureRight(0);
 		
 //		fallingRope.setRotation(-45);
 //		fallingRope.setPlayMode(Animation.NORMAL);
 //		actorStage.addActor(fallingRope);
 //		actorStage.addActor(fallingRope2);
-		actorStage.addActor(testHero);
+//		actorStage.addActor(testHero);
 //		fallingRope.setVisible(false);
 		createTiledMapHelper();
 		
@@ -242,7 +247,16 @@ public class ActorBox2DStage{
 		bd.position.set(x, y);
 		bd.fixedRotation = true;
 		
-		hero = new BodyImageActor2("hero", texRegion, world, bd, fd, new HeroData(), actorStage);
+//		hero = new BodyImageActor2("hero", texRegion, world, bd, fd, new HeroData(), actorStage);
+		hero = new BodyImageActor3(world, bd, fd, new HeroData(), actorStage, heroTexture, 1, 4, 0.5f);
+		hero.setName("hero");
+//		hero.getAnimatedActor().setUseFlippedTextureFromRight(true);
+		hero.getAnimatedActor().setUseFlippedTextureFromLeft(true);
+		hero.getAnimatedActor().setStandByTextureLeft(0);
+//		hero.getAnimatedActor().setUseFlippedTextureFromLeft(true);
+		hero.setScale(0.05f, 0.05f);
+		hero.getAnimatedActor().rotate(-90);
+		hero.setBounds(1, 1, 1, 1);
 //		this.addActor(hero);
 		
 		
@@ -315,12 +329,18 @@ public class ActorBox2DStage{
 		actorStage.act(delta);
 		actorStage.draw();
 		hero.refreshImagePosition();
+//		print = "hero (" + df.format(hero.getX()) + ", " + df.format(hero.getY()) + ")";
+		print = "direction = " + getDirection(hero.getDirection());
+		print2 = "frame = " + hero.getAnimatedActor().getFrameIndex();
+		
 		refreshCorda();
 		if(hero.getLinearVelocity().x > 0){
-			hero.setDirection(true);
+//			hero.setDirection(true);
+			hero.setDirection(AnimatedActorHero.RIGHT);
 		}else{
 			if(hero.getLinearVelocity().x < 0){
-				hero.setDirection(false);
+//				hero.setDirection(false);
+				hero.setDirection(AnimatedActorHero.LEFT);
 			}
 		}
 //		fallingRope.
@@ -337,6 +357,21 @@ public class ActorBox2DStage{
 //		this.draw();
 //		this.getCamera().
 //		renderer.
+	}
+	
+	private String getDirection(int dir){
+		switch (dir){
+			case AnimatedActorHero.DOWN:
+				return "DOWN";
+			case AnimatedActorHero.LEFT:
+				return "LEFT";
+			case AnimatedActorHero.RIGHT:
+				return "RIGHT";
+			case AnimatedActorHero.UP:
+				return "UP";
+			default:
+				return "??";
+		}
 	}
 	
 	private void refreshCorda(){
@@ -409,18 +444,18 @@ public class ActorBox2DStage{
 					}
 			}
 			*/
-			if(testHero != null && testHero.isVisible()){
-				
-				testHero.setPosition(hero.getX() + (hero.getWidth()/2), hero.getY() + hero.getHeigth());
-//				fallingRope2.rotate(1);
-			}else{
-				if(testHero == null)
-					System.out.println("testHero == null");
-				else
-					if(!testHero.isVisible()){
-						System.out.println("!testHero.isVisible()");
-					}
-			}
+//			if(testHero != null && testHero.isVisible()){
+//				
+//				testHero.setPosition(hero.getX() + (hero.getWidth()/2), hero.getY() + hero.getHeigth());
+////				fallingRope2.rotate(1);
+//			}else{
+//				if(testHero == null)
+//					System.out.println("testHero == null");
+//				else
+//					if(!testHero.isVisible()){
+//						System.out.println("!testHero.isVisible()");
+//					}
+//			}
 			
 		}
 //		if(fallingRope != null)
@@ -627,10 +662,13 @@ public class ActorBox2DStage{
 		float squareWidth = 4;
 		float squareHeight = 4;
 		float xneg = -((2 * x) + squareWidth);
-		if(hero.getDirection()){
+//		if(hero.getDirection()){
+		if(hero.getDirection() == AnimatedActorHero.RIGHT){
 			world.QueryAABB(callback, hero.getBodyPosition().x + x, hero.getBodyPosition().y + y, hero.getBodyPosition().x + (x + squareWidth), hero.getBodyPosition().y + (y + squareHeight));
 		}else{
-			world.QueryAABB(callback, hero.getBodyPosition().x + xneg, hero.getBodyPosition().y + y, hero.getBodyPosition().x + (xneg + squareWidth), hero.getBodyPosition().y + (y + squareHeight));
+			if(hero.getDirection() == AnimatedActorHero.LEFT){
+				world.QueryAABB(callback, hero.getBodyPosition().x + xneg, hero.getBodyPosition().y + y, hero.getBodyPosition().x + (xneg + squareWidth), hero.getBodyPosition().y + (y + squareHeight));
+			}
 		}
 		if(hitBody == null)
 			return false;
@@ -643,13 +681,18 @@ public class ActorBox2DStage{
 	public String toPrint(){
 		return print;
 	}
+	private String print2 = "";
+	public String toPrint2(){
+		return print2;
+	}
 	
 	public void dispose() {
-		texRegion.getTexture().dispose();
+//		texRegion.getTexture().dispose();
 		actorStage.dispose();
 		world.dispose();
 		cordaAni.dispose();
 		ropeTexture.dispose();
+		heroTexture.dispose();
 //		ui.dispose();
 //        skin.dispose();
 	}

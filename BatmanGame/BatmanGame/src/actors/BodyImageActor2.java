@@ -53,8 +53,6 @@ public class BodyImageActor2 {
 //		body = world.createBody(def);
 //		body.createFixture(fixturedef);	
 //		body.setUserData(this);
-//		
-//		
 //	}
 	
 	private float scale = 16;
@@ -64,11 +62,6 @@ public class BodyImageActor2 {
 		System.out.println("creating BodyImageActor: " + name);
 		image.setName(name);
 		image.setBounds(1, 1, 1, 1);
-//		image.scale(1/16);
-//		image.
-//		image.
-//		image.scale(1, 1);
-//		image.size(1, 1);
 		stage.addActor(image);
 		
 
@@ -194,19 +187,6 @@ public class BodyImageActor2 {
 	public void refreshImagePosition(){
 		image.setPosition(body.getPosition().x - (image.getWidth()/2), body.getPosition().y - (image.getHeight()/2));
 	}
-	
-//	public void setPosition(Vector2 pos){
-//		image.setPosition(pos.x, pos.y);
-//	}
-//	
-//	public void setPosition(float x, float y){
-//		image.setPosition(x, y);
-//	}
-	
-//	public void setBodyPosition(Vector2 pos){
-//		body.set
-//		
-//	}
 	
 	public Vector2 getLinearVelocity(){
 		return body.getLinearVelocity();

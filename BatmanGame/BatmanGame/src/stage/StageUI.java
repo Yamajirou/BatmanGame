@@ -117,7 +117,8 @@ public class StageUI extends Stage{
 			public void changed (ChangeEvent event, Actor actor) {
 				System.out.println("but2");
 //				mainStage.throwRope();
-				mainStage.testHero.setStandBy(AnimatedActorHero.STANDBY_RIGHT);
+//				mainStage.testHero.setStandBy(AnimatedActorHero.STANDBY_RIGHT);
+				mainStage.hero.getBody().setTransform(mainStage.hero.getX() + 1, mainStage.hero.getY() + 1, 0);
 			}
 		});
 		but3.addListener(new ChangeListener() {
@@ -277,6 +278,19 @@ public class StageUI extends Stage{
 //			float x = mainStage.hero.getX() + touchpad.getKnobPercentX() * blockSpeed;
 //			float y = mainStage.hero.getY() + touchpad.getKnobPercentY() * blockSpeed;
 			float forceX = touchpad.getKnobPercentX() * blockSpeed;
+			if(touchpad.getKnobPercentX() == 0){
+//				System.out.println("standBy == true");
+				mainStage.hero.getAnimatedActor().setStandBy(true);
+			}
+			else{
+//				System.out.println("standBy == false");
+				mainStage.hero.getAnimatedActor().setStandBy(false);
+				if(touchpad.getKnobPercentX() > 0){
+					mainStage.hero.setDirection(AnimatedActorHero.RIGHT);
+				}else{
+					mainStage.hero.setDirection(AnimatedActorHero.LEFT);
+				}
+			}
 //			float forceY = touchpad.getKnobPercentY() * blockSpeed;
 //			mainStage.hero.applyForce(new Vector2(x,y), mainStage.hero.getBody().getWorldCenter());
 //			System.out.println("forceX = " + forceX);
@@ -301,7 +315,8 @@ public class StageUI extends Stage{
 //			mainStage.moveHero(x, y);
 //			mainStage.act(delta);
 			textBody.setText("position: " + (df.format(mainStage.hero.getBody().getPosition().x)) + ", " + (df.format(mainStage.hero.getBody().getPosition().y)));
-			textImage.setText("velocity: " + (df.format(mainStage.hero.getLinearVelocity().x)));
+//			textImage.setText("velocity: " + (df.format(mainStage.hero.getLinearVelocity().x)));
+			textImage.setText(mainStage.toPrint2());
 			textDebug.setText(mainStage.toPrint());
 		}
 		//Move blockSprite with TouchPad

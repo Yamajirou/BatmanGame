@@ -3,13 +3,28 @@ package actors;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
-public class AnimatedActorHero extends AnimatedActorBase{
+public class AnimatedActorHero4Directions extends Actor{
+	
+	protected Animation animation;
+	protected TextureRegion currentFrame;
+	protected float stateTime = 0;
+	protected int height = 0;
+	protected int width = 0;
+	
 	private TextureRegion standByTextureRight;
 	private TextureRegion standByTextureLeft;
 	private TextureRegion standByTextureUp;
 	private TextureRegion standByTextureDown;
+	
+	private TextureRegion textures[][];
+	private int textureRightIndex = 0;
+	private int textureLeftIndex = 0;
+	private int textureDownIndex = 0;
+	private int textureUpIndex = 0;
+	
 	private int direction = -1;
 	private boolean standBy = false;
 	private int frameIndex = 0;
@@ -21,6 +36,11 @@ public class AnimatedActorHero extends AnimatedActorBase{
 	private boolean useFlippedTextureFromRight = false;
 	private boolean useFlippedTextureFromLeft = false;
 	
+	public float frameDuration;
+	public float animationDuration;
+	
+	private int directions; //quantas direcoes tem
+	
 	public static final int RIGHT = 0;
 	public static final int LEFT = 1;
 	public static final int UP = 2;
@@ -28,35 +48,77 @@ public class AnimatedActorHero extends AnimatedActorBase{
 	
 	private int i = 0;
 	
-	public AnimatedActorHero(float frameDuration, Texture texture, int cols, int rows){
-		this(frameDuration, texture, cols, rows, cols * rows);
+	public AnimatedActorHero4Directions(float frameDuration, Texture texture, int cols, int rows){
+//		this(frameDuration, texture, cols, rows, cols * rows, 1);
+		this.frameDuration = frameDuration;
+		TextureRegion tmp[][] = TextureRegion.split(texture, texture.getWidth()/cols, texture.getHeight()/rows);
+		maxFrames = cols;
+		defaultStandBy();
+		fillTextures(tmp, cols, rows);
 	}
 	
-	public AnimatedActorHero(float frameDuration, Texture texture, int cols, int rows, int frameQtd){
-		super(frameDuration, texture, cols, rows, frameQtd);
+	public AnimatedActorHero4Directions(float frameDuration, Texture texture, int cols, int rows, int framesQtd, int directions){
+//		super(frameDuration, texture, cols, rows, frameQtd);
+		this.frameDuration = frameDuration;
+		TextureRegion tmp[][] = TextureRegion.split(texture, texture.getWidth()/cols, texture.getHeight()/rows);
+		fillTextures(tmp, cols, rows, framesQtd, directions);
 		defaultStandBy();
 		maxFrames = cols;
 	}
 	
-	public AnimatedActorHero(float frameDuration, TextureRegion [][] textures) {
+	public AnimatedActorHero4Directions(float frameDuration, TextureRegion [][] textures) {
 		super(frameDuration, textures);
 		defaultStandBy();
 		maxFrames = textures.length;
 	}
 	
-	public AnimatedActorHero(float frameDuration, Array <? extends TextureRegion> keyFrames) {
+	public AnimatedActorHero4Directions(float frameDuration, Array <? extends TextureRegion> keyFrames) {
 		super(frameDuration, keyFrames);
 		defaultStandBy();
 	}
 	
-	public AnimatedActorHero(float frameDuration, TextureRegion... frames) {
+	public AnimatedActorHero4Directions(float frameDuration, TextureRegion... frames) {
 		super(frameDuration, frames);
 		defaultStandBy();
 	}	
 	
-	public AnimatedActorHero(float frameDuration, Array <? extends TextureRegion> keyFrames, int playType) {
+	public AnimatedActorHero4Directions(float frameDuration, Array <? extends TextureRegion> keyFrames, int playType) {
 		super(frameDuration, keyFrames, playType);
 		defaultStandBy();
+	}
+	
+	private void fillTextures(TextureRegion from[][], int cols, int rows){
+		textures = new TextureRegion[cols][];
+		for(int i = 0; i < rows; i++){
+			for(int j = 0; j < cols; j++){
+				textures[i][j] = from[i][j];
+			}
+		}
+	}
+	
+	private void fillTextures(TextureRegion from[][], int cols, int rows, int framesQtd, int directions){
+		if((cols*rows) == framesQtd){
+			textures = new TextureRegion[cols][];
+			for(int i = 0; i < rows; i++){
+				for(int j = 0; j < cols; j++){
+					textures[i][j] = from[i][j];
+				}
+			}
+		}else{
+			textures = new TextureRegion[directions][];
+			int ci, ri;
+			ci = ri = 0;
+			int framesPerDirection = framesQtd/directions;
+			for(int i = 0; i < rows; i++, ri++){
+				if(ri  >= framesPerDirection){
+					ri = 0;
+					ci++;
+				}
+				for(int j = 0; j < cols; j++){
+					textures[ci][ri] = from[i][j];
+				}
+			}
+		}
 	}
 	
 	private void defaultStandBy(){
@@ -64,6 +126,10 @@ public class AnimatedActorHero extends AnimatedActorBase{
 		standByTextureUp = animation.getKeyFrame(0);
 		standByTextureLeft = animation.getKeyFrame(0);
 		standByTextureRight = animation.getKeyFrame(0);
+	}
+	
+	public int getKeyFrameIndex (float stateTime) {
+		int frameNumber = (int)(stateTime / frameDuration);
 	}
 	
 	public void setStandByTextureRight(int index){
@@ -242,16 +308,16 @@ public class AnimatedActorHero extends AnimatedActorBase{
 //		System.out.println("i = " + i++);
 		if(standBy){
 			switch(direction){
-				case AnimatedActorHero.RIGHT:
+				case AnimatedActorHero4Directions.RIGHT:
 					this.currentFrame = standByTextureRight;
 					break;
-				case AnimatedActorHero.LEFT:
+				case AnimatedActorHero4Directions.LEFT:
 					this.currentFrame = standByTextureLeft;
 					break;
-				case AnimatedActorHero.UP:
+				case AnimatedActorHero4Directions.UP:
 					this.currentFrame = standByTextureUp;
 					break;
-				case AnimatedActorHero.DOWN:
+				case AnimatedActorHero4Directions.DOWN:
 					this.currentFrame = standByTextureDown;
 					break;
 				default:
@@ -268,7 +334,7 @@ public class AnimatedActorHero extends AnimatedActorBase{
 //			System.out.println("direction = " + direction);
 			
 			switch(direction){
-				case AnimatedActorHero.RIGHT:
+				case AnimatedActorHero4Directions.RIGHT:
 					this.currentFrame = this.getFrameByIndex(frameIndex + frameIndexRight);
 //					System.out.println("RIGHT: getting frame (" + (frameIndex + frameIndexRight) + ")");
 					if(useFlippedTextureFromLeft){
@@ -282,7 +348,7 @@ public class AnimatedActorHero extends AnimatedActorBase{
 						}
 					}
 					break;
-				case AnimatedActorHero.LEFT:
+				case AnimatedActorHero4Directions.LEFT:
 					this.currentFrame = this.getFrameByIndex(frameIndex + frameIndexLeft);
 //					System.out.println("LEFT: getting frame (" + (frameIndex + frameIndexLeft) + ")");
 					if(useFlippedTextureFromLeft){
@@ -296,10 +362,10 @@ public class AnimatedActorHero extends AnimatedActorBase{
 						}
 					}
 					break;
-				case AnimatedActorHero.UP:
+				case AnimatedActorHero4Directions.UP:
 					this.currentFrame = this.getFrameByIndex(frameIndex + frameIndexUp);
 					break;
-				case AnimatedActorHero.DOWN:
+				case AnimatedActorHero4Directions.DOWN:
 					this.currentFrame = this.getFrameByIndex(frameIndex + frameIndexDown);
 					break;
 				default:
