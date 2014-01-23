@@ -17,7 +17,7 @@ public class GLOBAL {
 	public static final float SKY_Y				=	SCREEN_HEIGHT - 64.0f;
 	
 	
-	public static boolean DEBUG					=	false;
+	public static boolean DEBUG					=	true;
 	public static boolean COLLISION				=	true;
 	public static boolean ADDACTOR				=	false; 
 	

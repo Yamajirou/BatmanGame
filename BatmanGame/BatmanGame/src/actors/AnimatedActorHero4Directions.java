@@ -2,35 +2,37 @@ package actors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
 public class AnimatedActorHero4Directions extends Actor{
 	
-	protected Animation animation;
 	protected TextureRegion currentFrame;
+	private Sprite spriteFrame;
+	public float rot = 0;
+	
 	protected float stateTimeRight = 0;
 	protected float stateTimeLeft = 0;
 	protected float stateTimeDown = 0;
 	protected float stateTimeUp = 0;
 	
-	protected int height = 0;
-	protected int width = 0;
-	
 	private TextureRegion textures[][];
 	
 	private boolean standBy = false;
+	public int currentIndex = 0;
 
-	private int frameIndexRight = 0;
-	private int frameIndexLeft = 0;
-	private int frameIndexUp = 0;
-	private int frameIndexDown = 0;
+//	private int frameIndexRight = 0;
+//	private int frameIndexLeft = 0;
+//	private int frameIndexUp = 0;
+//	private int frameIndexDown = 0;
 	
 	private int rowRight = 0;
-	private int rowLeft = 1;
-	private int rowDown = 2;
-	private int rowUp = 3;
+	private int rowLeft = 0;
+	private int rowDown = 0;
+	private int rowUp = 0;
 	
 	private int standByIndexRight = 0;
 	private int standByIndexLeft = 0;
@@ -40,10 +42,10 @@ public class AnimatedActorHero4Directions extends Actor{
 	private boolean useFlippedTextureFromRight = false;
 	private boolean useFlippedTextureFromLeft = false;
 	
-	public float frameDuration;
-	public float animationDuration;
+	public float frameDuration = 0.25f;
+//	public float animationDuration;
 	
-	private int directions; //quantas direcoes tem
+//	private int directions; //quantas direcoes tem
 	
 	private int direction = -1;
 	
@@ -51,8 +53,6 @@ public class AnimatedActorHero4Directions extends Actor{
 	public static final int LEFT = 1;
 	public static final int UP = 2;
 	public static final int DOWN = 3;
-	
-	private int i = 0;
 	
 	public AnimatedActorHero4Directions(float frameDuration, Texture texture, int cols, int rows){
 		this.frameDuration = frameDuration;
@@ -78,6 +78,9 @@ public class AnimatedActorHero4Directions extends Actor{
 		for(TextureRegion tr : keyFrames){
 			textures[0][i++] = tr;
 		}
+		spriteFrame = new Sprite(textures[0][0]);
+		this.setHeight(textures[0][0].getRegionHeight());
+		this.setWidth(textures[0][0].getRegionWidth());
 	}
 	
 	public AnimatedActorHero4Directions(float frameDuration, TextureRegion... frames) {
@@ -86,6 +89,9 @@ public class AnimatedActorHero4Directions extends Actor{
 		for(int i = 0; i < frames.length; i++){
 			textures[0][i] = frames[i];
 		}
+		spriteFrame = new Sprite(textures[0][0]);
+		this.setHeight(textures[0][0].getRegionHeight());
+		this.setWidth(textures[0][0].getRegionWidth());
 	}
 	
 	private void fillTextures(TextureRegion from[][], int cols, int rows){
@@ -95,6 +101,9 @@ public class AnimatedActorHero4Directions extends Actor{
 				textures[i][j] = from[i][j];
 			}
 		}
+		spriteFrame = new Sprite(textures[0][0]);
+		this.setHeight(textures[0][0].getRegionHeight());
+		this.setWidth(textures[0][0].getRegionWidth());
 	}
 	
 	private void fillTextures(TextureRegion from[][], int cols, int rows, int framesQtd, int directions){
@@ -114,43 +123,15 @@ public class AnimatedActorHero4Directions extends Actor{
 					textures[ci][ri] = from[i][j];
 				}
 			}
+			spriteFrame = new Sprite(textures[0][0]); 
+			this.setHeight(textures[0][0].getRegionHeight());
+			this.setWidth(textures[0][0].getRegionWidth());
 		}
 	}
 	
-	public int getFrameIndexRight() {
-		return frameIndexRight;
-	}
-
-	public void setFrameIndexRight(int frameIndexRight) {
-		this.frameIndexRight = frameIndexRight;
-		if(useFlippedTextureFromRight)
-			this.frameIndexLeft = this.frameIndexRight;
-	}
-
-	public int getFrameIndexLeft() {
-		return frameIndexLeft;
-	}
-
-	public void setFrameIndexLeft(int frameIndexLeft) {
-		this.frameIndexLeft = frameIndexLeft;
-		if(useFlippedTextureFromLeft)
-			this.frameIndexRight = this.frameIndexLeft;
-	}
-
-	public int getFrameIndexUp() {
-		return frameIndexUp;
-	}
-
-	public void setFrameIndexUp(int frameIndexUp) {
-		this.frameIndexUp = frameIndexUp;
-	}
-
-	public int getFrameIndexDown() {
-		return frameIndexDown;
-	}
-
-	public void setFrameIndexDown(int frameIndexDown) {
-		this.frameIndexDown = frameIndexDown;
+	
+	public void setOrigin(float x, float y){
+		spriteFrame.setOrigin(x, y);
 	}
 
 	public void setDirection(int direction){
@@ -167,6 +148,10 @@ public class AnimatedActorHero4Directions extends Actor{
 
 	public void setUseFlippedTextureFromRight(boolean useFlippedTextureFromRight) {
 		this.useFlippedTextureFromRight = useFlippedTextureFromRight;
+		if(useFlippedTextureFromRight){
+			this.rowLeft = this.rowRight;
+			this.standByIndexLeft = this.standByIndexRight;
+		}
 	}
 	
 	public boolean isUseFlippedTextureFromLeft() {
@@ -175,8 +160,89 @@ public class AnimatedActorHero4Directions extends Actor{
 
 	public void setUseFlippedTextureFromLeft(boolean useFlippedTextureFromLeft) {
 		this.useFlippedTextureFromLeft = useFlippedTextureFromLeft;
+		if(useFlippedTextureFromLeft){
+			this.rowRight = this.rowLeft;
+			this.standByIndexRight = this.standByIndexLeft;
+		}
 	}
 	
+	public int getRowRight() {
+		return rowRight;
+	}
+
+	public void setRowRight(int rowRight) {
+		this.rowRight = rowRight;
+		if(this.useFlippedTextureFromRight){
+			this.rowLeft = this.rowRight;
+			this.standByIndexLeft = this.standByIndexRight;
+		}
+	}
+
+	public int getRowLeft() {
+		return rowLeft;
+	}
+
+	public void setRowLeft(int rowLeft) {
+		this.rowLeft = rowLeft;
+		if(this.useFlippedTextureFromLeft){
+			this.rowRight = this.rowLeft;
+			this.standByIndexRight = this.standByIndexLeft;
+		}
+	}
+
+	public int getRowDown() {
+		return rowDown;
+	}
+
+	public void setRowDown(int rowDown) {
+		this.rowDown = rowDown;
+	}
+
+	public int getRowUp() {
+		return rowUp;
+	}
+
+	public void setRowUp(int rowUp) {
+		this.rowUp = rowUp;
+	}
+
+	public int getStandByIndexRight() {
+		return standByIndexRight;
+	}
+
+	public void setStandByIndexRight(int standByIndexRight) {
+		this.standByIndexRight = standByIndexRight;
+		if(this.useFlippedTextureFromRight){
+			this.standByIndexLeft = this.standByIndexRight;
+		}
+	}
+
+	public int getStandByIndexLeft() {
+		return standByIndexLeft;
+	}
+
+	public void setStandByIndexLeft(int standByIndexLeft) {
+		this.standByIndexLeft = standByIndexLeft;
+		if(this.useFlippedTextureFromLeft){
+			this.standByIndexRight = this.standByIndexLeft;
+		}
+	}
+
+	public int getStandByIndexUp() {
+		return standByIndexUp;
+	}
+
+	public void setStandByIndexUp(int standByIndexUp) {
+		this.standByIndexUp = standByIndexUp;
+	}
+
+	public int getStandByIndexDown() {
+		return standByIndexDown;
+	}
+
+	public void setStandByIndexDown(int standByIndexDown) {
+		this.standByIndexDown = standByIndexDown;
+	}
 
 	public void setStandBy(boolean standing){
 		standBy = standing;
@@ -219,8 +285,9 @@ public class AnimatedActorHero4Directions extends Actor{
 					stateTimeRight += delta;
 					stateTimeDown = 0;
 					stateTimeUp = 0;
-					index = (int) ((stateTimeRight % (textures[rowLeft].length * animation.frameDuration)) / animation.frameDuration);
+					index = (int) ((stateTimeRight % (textures[rowRight].length * frameDuration)) / frameDuration);
 					this.currentFrame = textures[rowRight][index];
+					currentIndex = index;
 					if(useFlippedTextureFromLeft){
 						if(!this.currentFrame.isFlipX()){
 							this.currentFrame.flip(true, false);
@@ -237,8 +304,12 @@ public class AnimatedActorHero4Directions extends Actor{
 					stateTimeDown = 0;
 					stateTimeRight = 0;
 					stateTimeUp = 0;
-					index = (int) ((stateTimeLeft % (textures[rowLeft].length * animation.frameDuration)) / animation.frameDuration);
+					index = (int) ((stateTimeLeft % (textures[rowLeft].length * frameDuration)) / frameDuration);
 					this.currentFrame = textures[rowLeft][index];
+					if(this.currentFrame == null){
+						System.out.println("currentFrame == null!!!!!");
+					}
+					currentIndex = index;
 					if(useFlippedTextureFromLeft){
 						if(this.currentFrame.isFlipX()){
 							this.currentFrame.flip(true, false);
@@ -255,16 +326,16 @@ public class AnimatedActorHero4Directions extends Actor{
 					stateTimeDown = 0;
 					stateTimeRight = 0;
 					stateTimeUp += delta;
-					index = (int) ((stateTimeUp % (textures[rowLeft].length * animation.frameDuration)) / animation.frameDuration);
-					this.currentFrame = textures[rowLeft][index];
+					index = (int) ((stateTimeUp % (textures[rowUp].length * frameDuration)) / frameDuration);
+					this.currentFrame = textures[rowUp][index];
 					break;
 				case AnimatedActorHero4Directions.DOWN:
 					stateTimeLeft = 0;
 					stateTimeDown += delta;
 					stateTimeRight = 0;
 					stateTimeUp = 0;
-					index = (int) ((stateTimeDown % (textures[rowLeft].length * animation.frameDuration)) / animation.frameDuration);
-					this.currentFrame = textures[rowLeft][index];
+					index = (int) ((stateTimeDown % (textures[rowDown].length * frameDuration)) / frameDuration);
+					this.currentFrame = textures[rowDown][index];
 					break;
 				default:
 					stateTimeLeft = 0;
@@ -278,4 +349,36 @@ public class AnimatedActorHero4Directions extends Actor{
 			}
 		}
 	}
+	
+	@Override
+	public void draw(SpriteBatch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+//		currentFrame.
+		spriteFrame.setRegion(currentFrame);
+//		spriteFrame.setOrigin(1, 1);
+		spriteFrame.rotate(rot);
+//		spriteFrame.
+		spriteFrame.setScale(this.getScaleX(), this.getScaleY());
+		spriteFrame.setBounds(1, 1, 1, 1);
+//		spriteFrame.set
+		spriteFrame.setPosition(this.getX(), this.getY());
+//		batch.draw(currentFrame, this.getX(), this.getY(), 
+////				this.getOriginX()/2, this.getOriginY()/2, 
+//				0, 0,
+//				parentAlpha, parentAlpha, 
+//				this.getHeight()*this.getScaleX(), this.getWidth()*this.getScaleY(), 
+//				this.getRotation());
+		spriteFrame.draw(batch, parentAlpha);
+		System.out.println("-----------drawing--------------");
+		System.out.println("alpha = " + parentAlpha);
+		System.out.println(this.getName() + "(" + getX() + ", " + getY() + ")");
+		System.out.println("origin (" + ((this.getOriginX()/2)*this.getScaleX()) + ", " + ((this.getOriginY()/2)*this.getScaleY()) + ")");
+		System.out.println("heigth = " + this.getHeight());
+		System.out.println("ScaleX = " + (this.getHeight() * this.getScaleX()));
+		System.out.println("width = " + this.getWidth());
+		System.out.println("scaleY = " + (this.getWidth() * this.getScaleY()));
+		System.out.println("rotation = " + this.getRotation());
+	}
+	
+	
 }

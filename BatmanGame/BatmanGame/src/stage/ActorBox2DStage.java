@@ -11,6 +11,7 @@ import actors.AnimatedSimpleActor;
 import actors.BodyImageActor;
 import actors.BodyImageActor2;
 import actors.BodyImageActor3;
+import actors.BodyImageActor4;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -52,7 +53,8 @@ public class ActorBox2DStage{
 	
 //	public Image hero;
 //	public BodyImageActor2 hero;
-	public BodyImageActor3 hero;
+//	public BodyImageActor3 hero;
+	public BodyImageActor4 hero;
 //	private TextureAtlas atlas;
 	private TextureRegion texRegion;
 	private Texture heroTexture;
@@ -248,15 +250,22 @@ public class ActorBox2DStage{
 		bd.fixedRotation = true;
 		
 //		hero = new BodyImageActor2("hero", texRegion, world, bd, fd, new HeroData(), actorStage);
-		hero = new BodyImageActor3(world, bd, fd, new HeroData(), actorStage, heroTexture, 1, 4, 0.5f);
+//		hero = new BodyImageActor3(world, bd, fd, new HeroData(), actorStage, heroTexture, 1, 4, 0.5f);
+		hero = new BodyImageActor4(world, bd, fd, new HeroData(), actorStage, heroTexture, 1, 4, 0.5f);
 		hero.setName("hero");
 //		hero.getAnimatedActor().setUseFlippedTextureFromRight(true);
 		hero.getAnimatedActor().setUseFlippedTextureFromLeft(true);
-		hero.getAnimatedActor().setStandByTextureLeft(0);
+//		hero.getAnimatedActor().setOrigin(hero.getWidth()/2, hero.getHeigth()/2);
+		hero.getAnimatedActor().setOrigin(1, 1);
+//		hero.getAnimatedActor().
+//		hero.getAnimatedActor().setStandByTextureLeft(0);
+		hero.getAnimatedActor().setStandByIndexLeft(0);
 //		hero.getAnimatedActor().setUseFlippedTextureFromLeft(true);
-		hero.setScale(0.05f, 0.05f);
-		hero.getAnimatedActor().rotate(-90);
+		hero.getAnimatedActor().rot = hero.getAnimatedActor().rot + 1;
+		hero.setScale(2f, 2f);
+//		hero.getAnimatedActor().rotate(90);
 		hero.setBounds(1, 1, 1, 1);
+//		hero.getAnimatedActor().set
 //		this.addActor(hero);
 		
 		
@@ -324,14 +333,16 @@ public class ActorBox2DStage{
 //		this.getCamera().position.set(hero.getX(), hero.getY(), 0);
 //		this.getCamera().update();
 //		camera.update();
-//		renderer.render(world, actorStage.getCamera().combined);
+		renderer.render(world, actorStage.getCamera().combined); //	TODO renderer!!!
 		tiledMapHelper.render();
 		actorStage.act(delta);
 		actorStage.draw();
 		hero.refreshImagePosition();
+		hero.getAnimatedActor().rotate(1);
 //		print = "hero (" + df.format(hero.getX()) + ", " + df.format(hero.getY()) + ")";
 		print = "direction = " + getDirection(hero.getDirection());
-		print2 = "frame = " + hero.getAnimatedActor().getFrameIndex();
+		print2 = "index = " + hero.getAnimatedActor().currentIndex;
+//		print2 = "frame = " + hero.getAnimatedActor().getFrameIndex();
 		
 		refreshCorda();
 		if(hero.getLinearVelocity().x > 0){
