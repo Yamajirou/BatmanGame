@@ -179,7 +179,11 @@ public class BodyImageActor4 {
 	
 	public void refreshImagePosition(){
 //		animatedActor.setPosition(body.getPosition().x - (animatedActor.getWidth()/2), body.getPosition().y - (animatedActor.getHeight()/2));
+//		System.out.println("refreshing position!!! -----------");
+//		System.out.println("body.size (" + );
 		animatedActor.setPosition(body.getPosition().x, body.getPosition().y);
+//		animatedActor.spriteFrame.setPosition(body.getPosition().x - animatedActor.spriteFrame.getScaleX()/4, body.getPosition().y - animatedActor.spriteFrame.getScaleY()/4);
+//		System.out.println("spriteFrame.position (" + animatedActor.spriteFrame.getX() + ", " + animatedActor.spriteFrame.getY() + ")");
 	}
 	
 	public Vector2 getLinearVelocity(){

@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -51,6 +52,9 @@ import data.HeroData;
 
 public class ActorBox2DStage{
 	
+	float BOX2D_TO_PIXELS = 3;
+	float PIXELS_TO_BOX2D = 0.75f;
+	
 //	public Image hero;
 //	public BodyImageActor2 hero;
 //	public BodyImageActor3 hero;
@@ -59,7 +63,9 @@ public class ActorBox2DStage{
 	private TextureRegion texRegion;
 	private Texture heroTexture;
 	private TextureRegion cordaTex;
+	private Texture corda1Texture;
 	private Texture cordaAni;
+	private Texture toadTexture;
 	
 	OrthographicCamera camera;
 	Box2DDebugRenderer renderer;
@@ -76,6 +82,7 @@ public class ActorBox2DStage{
 	private Texture ropeTexture;
 //	public AnimatedActorHero testHero;
 //	private boolean canThrowRope = true;
+	private Sprite spriteFrame;
 	
 	private Array<BodyImageActor2> actors;
 	
@@ -145,8 +152,17 @@ public class ActorBox2DStage{
 		createHero(0, 20);
 //		createStaticSquare(200, 2, 10, 10);
 //		createStaticSquare(2, 2, 10, 20);
-		cordaTex = new TextureRegion(new Texture(Gdx.files.internal("data/corda1.jpg")));
+		corda1Texture = new Texture(Gdx.files.internal("data/corda1.jpg"));
+		cordaTex = new TextureRegion(corda1Texture);
 		ropeTexture = new Texture(Gdx.files.internal("data/cordaAni.png"));
+		toadTexture = new Texture(Gdx.files.internal("data/Toad.png"));
+		spriteFrame = new Sprite(toadTexture);
+//		spriteFrame.setBounds(10f, 10f, 1f, 1f);
+		spriteFrame.setSize(2, 2);
+//		spriteFrame.
+		spriteFrame.setOrigin(spriteFrame.getScaleX()/2, spriteFrame.getScaleY()/2);
+//		spriteFrame.setScale(1, 1);
+		
 //		cordaAni = new Texture(Gdx.files.internal("data/cordaAni.png"));
 //		cordaAni.
 //		fallingRope = new AnimatedImageActor(cordaAni, 1, 3, 1);
@@ -234,6 +250,9 @@ public class ActorBox2DStage{
 	
 	private void createHero(float x, float y){
 		System.out.println("ActorStage.createHero()");
+		
+		
+		
 		PolygonShape shape3 = new PolygonShape();
 		shape3.setAsBox(0.5f, 0.5f);
 		FixtureDef fd = new FixtureDef();
@@ -256,16 +275,24 @@ public class ActorBox2DStage{
 //		hero.getAnimatedActor().setUseFlippedTextureFromRight(true);
 		hero.getAnimatedActor().setUseFlippedTextureFromLeft(true);
 //		hero.getAnimatedActor().setOrigin(hero.getWidth()/2, hero.getHeigth()/2);
-		hero.getAnimatedActor().setOrigin(1, 1);
+//		hero.getAnimatedActor().setOrigin(1, 1);
 //		hero.getAnimatedActor().
 //		hero.getAnimatedActor().setStandByTextureLeft(0);
 		hero.getAnimatedActor().setStandByIndexLeft(0);
 //		hero.getAnimatedActor().setUseFlippedTextureFromLeft(true);
-		hero.getAnimatedActor().rot = hero.getAnimatedActor().rot + 1;
-		hero.setScale(2f, 2f);
+//		hero.getAnimatedActor().rot = hero.getAnimatedActor().rot + 1;
+//		hero.setScale(2f, 2f);
 //		hero.getAnimatedActor().rotate(90);
-		hero.setBounds(1, 1, 1, 1);
-//		hero.getAnimatedActor().set
+//		hero.setBounds(1, 1, 1, 1);
+//		hero.getAnimatedActor().spriteFrame.setBounds(1, 1, 1, 1);
+		hero.getAnimatedActor().spriteFrame.setSize(0.5f * BOX2D_TO_PIXELS, 0.5f * BOX2D_TO_PIXELS);
+		hero.getAnimatedActor().spriteFrame.setOrigin(hero.getAnimatedActor().spriteFrame.getWidth()/2, 
+				hero.getAnimatedActor().spriteFrame.getHeight()/2);
+		hero.getAnimatedActor().spriteFrame.setScale(hero.getAnimatedActor().getScaleX(), hero.getAnimatedActor().getScaleY());
+		
+
+		
+//		hero.getAnimatedActor().spriteFrame.setPosition(hero.getX(), hero.getY());
 //		this.addActor(hero);
 		
 		
@@ -333,14 +360,33 @@ public class ActorBox2DStage{
 //		this.getCamera().position.set(hero.getX(), hero.getY(), 0);
 //		this.getCamera().update();
 //		camera.update();
-		renderer.render(world, actorStage.getCamera().combined); //	TODO renderer!!!
+		if(GLOBAL.BOX2D_DEBUG){
+			renderer.render(world, actorStage.getCamera().combined);
+		}
 		tiledMapHelper.render();
 		actorStage.act(delta);
 		actorStage.draw();
+//		actorStage.getSpriteBatch().begin();
+//		spriteFrame.draw(actorStage.getSpriteBatch());
+//		actorStage.getSpriteBatch().end();
+//		System.out.println("RefreshImage");
 		hero.refreshImagePosition();
-		hero.getAnimatedActor().rotate(1);
+		hero.getAnimatedActor().spriteFrame.setPosition(hero.getX() - hero.getAnimatedActor().spriteFrame.getScaleX()*PIXELS_TO_BOX2D, 
+				hero.getY() - hero.getAnimatedActor().spriteFrame.getScaleY()*PIXELS_TO_BOX2D);
+//		spriteFrame.setPosition(hero.getX(), hero.getY());
+//		System.out.println("---- act -----");
+//		System.out.println("hero.position (" + hero.getX() + ", " + hero.getY() + ")");
+//		System.out.println("hero.size (" + hero.getWidth() + ", " + hero.getHeigth() + ")");
+//		System.out.println("hero.animatedActor.size ( " + hero.getAnimatedActor().getWidth() + ", " + hero.getAnimatedActor().getHeight() + ")");
+//		System.out.println("hero.animatedActor.scale (" + hero.getAnimatedActor().getScaleX() + ", " + hero.getAnimatedActor().getScaleY() + ")");
+//		System.out.println(hero.getAnimatedActor().);
+//		spriteFrame.setPosition(hero.getX() - (hero.getWidth()/2), hero.getY() - (hero.getHeigth()/2));
+//		System.out.println("------------act ");
+//		spriteFrame.rotate(1);
+//		hero.getAnimatedActor().rotate(1);
 //		print = "hero (" + df.format(hero.getX()) + ", " + df.format(hero.getY()) + ")";
-		print = "direction = " + getDirection(hero.getDirection());
+		print = "sprite (" + df.format(spriteFrame.getX()) + ", " + df.format(spriteFrame.getY()) + ")";
+//		print = "direction = " + getDirection(hero.getDirection());
 		print2 = "index = " + hero.getAnimatedActor().currentIndex;
 //		print2 = "frame = " + hero.getAnimatedActor().getFrameIndex();
 		
@@ -368,6 +414,9 @@ public class ActorBox2DStage{
 //		this.draw();
 //		this.getCamera().
 //		renderer.
+		
+//		System.out.println("---- done ----");
+//		System.out.println();
 	}
 	
 	private String getDirection(int dir){
@@ -485,9 +534,7 @@ public class ActorBox2DStage{
 		if(hero.getY() > GLOBAL.SCREEN_HEIGHT/2){
 			actorStage.getCamera().position.set(actorStage.getCamera().position.x, hero.getY(), 0);
 		}
-		
 		actorStage.getCamera().update();
-		
 	}
 	
 	public Array<BodyImageActor2> getActors(){
@@ -614,7 +661,8 @@ public class ActorBox2DStage{
 			corda.setPosition(hero.getX() + hero.getWidth(), hero.getY() + hero.getHeigth());
 //			corda.rotate(degree);
 			corda.setRotation(degree);
-			corda.setBounds(1, 1, (float)dist, 0.1f);
+//			corda.setBounds(1, 1, (float)dist, 0.1f);
+			corda.setSize((float)dist, 0.1f);
 //			corda.setVisible(false);
 			actorStage.addActor(corda);
 		}else{
@@ -704,6 +752,8 @@ public class ActorBox2DStage{
 		cordaAni.dispose();
 		ropeTexture.dispose();
 		heroTexture.dispose();
+		toadTexture.dispose();
+		corda1Texture.dispose();
 //		ui.dispose();
 //        skin.dispose();
 	}

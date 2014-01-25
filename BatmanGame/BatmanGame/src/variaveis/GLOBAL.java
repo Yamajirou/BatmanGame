@@ -18,6 +18,7 @@ public class GLOBAL {
 	
 	
 	public static boolean DEBUG					=	true;
+	public static boolean BOX2D_DEBUG			=	false;
 	public static boolean COLLISION				=	true;
 	public static boolean ADDACTOR				=	false; 
 	

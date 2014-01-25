@@ -3,10 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="libs/gdx.jar" sourcepath="libs/gdx-sources.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/gdx"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/gdx-audio"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/gdx-backend-android"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/gdx-backend-lwjgl"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/gdx-backend-jglfw"/>
+	<classpathentry kind="lib" path="D:/jars/libgdx-nightly-latest/gdx-backend-lwjgl-natives.jar"/>
+	<classpathentry kind="lib" path="D:/jars/libgdx-nightly-latest/gdx-backend-lwjgl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

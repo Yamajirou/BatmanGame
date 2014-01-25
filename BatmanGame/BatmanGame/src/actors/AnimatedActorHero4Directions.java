@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 public class AnimatedActorHero4Directions extends Actor{
 	
 	protected TextureRegion currentFrame;
-	private Sprite spriteFrame;
+	public Sprite spriteFrame;
 	public float rot = 0;
 	
 	protected float stateTimeRight = 0;
@@ -348,36 +348,41 @@ public class AnimatedActorHero4Directions extends Actor{
 					break;
 			}
 		}
+		spriteFrame.setRegion(currentFrame);
 	}
 	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 //		currentFrame.
-		spriteFrame.setRegion(currentFrame);
-//		spriteFrame.setOrigin(1, 1);
-		spriteFrame.rotate(rot);
+//		spriteFrame.setRegion(currentFrame);
+//		spriteFrame.setOrigin(0, 0);
 //		spriteFrame.
-		spriteFrame.setScale(this.getScaleX(), this.getScaleY());
-		spriteFrame.setBounds(1, 1, 1, 1);
+//		spriteFrame.setBounds(1, 1, 1, 1);
+//		spriteFrame.setScale(this.getScaleX(), this.getScaleY());
+//		spriteFrame.setPosition(this.getX(), this.getY());
 //		spriteFrame.set
-		spriteFrame.setPosition(this.getX(), this.getY());
 //		batch.draw(currentFrame, this.getX(), this.getY(), 
 ////				this.getOriginX()/2, this.getOriginY()/2, 
 //				0, 0,
 //				parentAlpha, parentAlpha, 
 //				this.getHeight()*this.getScaleX(), this.getWidth()*this.getScaleY(), 
 //				this.getRotation());
-		spriteFrame.draw(batch, parentAlpha);
-		System.out.println("-----------drawing--------------");
-		System.out.println("alpha = " + parentAlpha);
-		System.out.println(this.getName() + "(" + getX() + ", " + getY() + ")");
-		System.out.println("origin (" + ((this.getOriginX()/2)*this.getScaleX()) + ", " + ((this.getOriginY()/2)*this.getScaleY()) + ")");
-		System.out.println("heigth = " + this.getHeight());
-		System.out.println("ScaleX = " + (this.getHeight() * this.getScaleX()));
-		System.out.println("width = " + this.getWidth());
-		System.out.println("scaleY = " + (this.getWidth() * this.getScaleY()));
-		System.out.println("rotation = " + this.getRotation());
+		spriteFrame.draw(batch);
+//		spriteFrame.rotate(1);
+//		System.out.println("-----------drawing--------------");
+//		System.out.println("alpha = " + parentAlpha);
+//		System.out.println(this.getName() + "(" + getX() + ", " + getY() + ")");
+//		System.out.println("origin (" + ((this.getOriginX()/2)*this.getScaleX()) + ", " + ((this.getOriginY()/2)*this.getScaleY()) + ")");
+//		System.out.println("heigth = " + this.getHeight());
+//		System.out.println("ScaleX = " + (this.getHeight() * this.getScaleX()));
+//		System.out.println("width = " + this.getWidth());
+//		System.out.println("scaleY = " + (this.getWidth() * this.getScaleY()));
+//		System.out.println("rotation = " + this.getRotation());
+//		
+//		System.out.println("----------------spriteframe-------------");
+//		System.out.println("position(" + spriteFrame.getX() + ", " + spriteFrame.getY() + ")");
+//		System.out.println("origin (" + spriteFrame.getOriginX() + ", " + spriteFrame.getOriginY() + ")");
 	}
 	
 	

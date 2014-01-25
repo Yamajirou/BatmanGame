@@ -116,14 +116,15 @@ public class StageUI extends Stage{
 		but2.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
 				System.out.println("but2");
-//				mainStage.throwRope();
+				mainStage.throwRope();
 //				mainStage.testHero.setStandBy(AnimatedActorHero.STANDBY_RIGHT);
-				mainStage.hero.getBody().setTransform(mainStage.hero.getX() + 1, mainStage.hero.getY() + 1, 0);
+//				mainStage.hero.getBody().setTransform(mainStage.hero.getX() + 1, mainStage.hero.getY() + 1, 0);
 			}
 		});
 		but3.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
 				System.out.println("but3");
+				mainStage.hero.getBody().setTransform(0, 20, 0);
 			}
 		});
 		
@@ -196,7 +197,9 @@ public class StageUI extends Stage{
 		
 		table.add(but1).space(10);
 		table.row();
-		table.add(but2);
+		table.add(but2).space(10);
+		table.row();
+		table.add(but3);
 		
 //		table.;
 		
