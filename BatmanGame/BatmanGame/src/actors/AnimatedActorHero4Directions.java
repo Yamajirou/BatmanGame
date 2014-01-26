@@ -384,6 +384,6 @@ public class AnimatedActorHero4Directions extends Actor{
 //		System.out.println("position(" + spriteFrame.getX() + ", " + spriteFrame.getY() + ")");
 //		System.out.println("origin (" + spriteFrame.getOriginX() + ", " + spriteFrame.getOriginY() + ")");
 	}
-	
+	//comentario
 	
 }
