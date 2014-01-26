@@ -13,7 +13,7 @@ public class AnimatedActorBase extends Actor{
 	protected float stateTime = 0;
 	protected int height = 0;
 	protected int width = 0;
-	
+	//Useless comment here
 	public AnimatedActorBase(){}
 	
 	public AnimatedActorBase(float frameDuration, Texture texture, int cols, int rows){
